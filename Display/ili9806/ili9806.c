@@ -1,7 +1,7 @@
 #include "ili9806.h"
 #include <string.h>
 #include <stdio.h>
-#include "main.h"
+
 
 static void ILI9806_Reset(void) {
     HAL_GPIO_WritePin(ILI9806_RES_GPIO_Port, ILI9806_RES_Pin, GPIO_PIN_RESET);
@@ -24,7 +24,7 @@ static void ILI9806_WriteDataMultiple(uint16_t * datas, uint32_t dataNums) {
     }
 }
 
-static void ILI9806_SetAddressWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
+void ILI9806_SetAddressWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
     // column address set
     ILI9806_WriteCommand(0x2A); // CASET
     {
@@ -112,9 +112,9 @@ void ILI9806_Init(void)
     ILI9806_WriteData(0x81); 
 
     ILI9806_WriteCommand(0xB1); // Frame Rate 
-    ILI9806_WriteData(0x00); 
-    ILI9806_WriteData(0x10); 
-    ILI9806_WriteData(0x14); 
+    ILI9806_WriteData(0x00); 	// ILI9806 Internal Oscillator Division Ratio = 0
+    ILI9806_WriteData(0x10); 	
+    ILI9806_WriteData(0x14); 	
 
     ILI9806_WriteCommand(0xF1); // 	Panel Timing Control 
     ILI9806_WriteData(0x29); 
@@ -439,7 +439,7 @@ void ILI9806_Test(void)
 {
     ILI9806_FillScreen(ILI9806_WHITE);
     HAL_Delay(1000);
-    ILI9806_WriteString(10, 10, "Fuxk you shit", Font_16x26, ILI9806_RED, ILI9806_WHITE);
+    ILI9806_WriteString(10, 10, "ILI9806 854X480 DISPLAY TEST", Font_16x26, ILI9806_RED, ILI9806_WHITE);
     HAL_Delay(2000);
     ILI9806_FillScreen(ILI9806_RED);
     HAL_Delay(1000);

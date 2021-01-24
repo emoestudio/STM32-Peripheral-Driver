@@ -2,6 +2,7 @@
 #define __ILI9806_H__
 
 #include "fonts.h"
+#include "main.h"
 #include <stdbool.h>
 
 #define ILI9806_CMD_ADDR ( ( uint32_t ) 0x60000000 )    //  Base data
@@ -40,35 +41,37 @@
 #define ILI9806_MADCTL_RGB 0x00
 #define ILI9806_MADCTL_BGR 0x08
 #define ILI9806_MADCTL_MH  0x04
+#define ILI9806_MADCTL_SS  0x02
+#define ILI9806_MADCTL_GS  0x01
 
 /* Select a rotate direction for display */
-#define ILI9806_SET_ROTATION 1
+#define ILI9806_SET_ROTATION 0
 
 // default orientation
 #if ILI9806_SET_ROTATION == 0
-    #define ILI9806_WIDTH  480
-    #define ILI9806_HEIGHT 854
-    #define ILI9806_ROTATION (ILI9806_MADCTL_MX | ILI9806_MADCTL_BGR)
+    #define ILI9806_WIDTH  854
+    #define ILI9806_HEIGHT 480
+    #define ILI9806_ROTATION (ILI9806_MADCTL_MX | ILI9806_MADCTL_MV |ILI9806_MADCTL_RGB)
 
 
-// rotate right
+// upside down
 #elif ILI9806_SET_ROTATION == 1
     #define ILI9806_WIDTH  854
     #define ILI9806_HEIGHT 480
-    #define ILI9806_ROTATION (ILI9806_MADCTL_MX | ILI9806_MADCTL_MY | ILI9806_MADCTL_MV | ILI9806_MADCTL_BGR)
+    #define ILI9806_ROTATION (ILI9806_MADCTL_MY | ILI9806_MADCTL_MV | ILI9806_MADCTL_RGB)
 
 
 // rotate left
 #elif ILI9806_SET_ROTATION == 2
-    #define ILI9806_WIDTH  854
-    #define ILI9806_HEIGHT 480
-    #define ILI9806_ROTATION (ILI9806_MADCTL_MV | ILI9806_MADCTL_RGB)
+    #define ILI9806_WIDTH  480
+    #define ILI9806_HEIGHT 854
+    #define ILI9806_ROTATION (ILI9806_MADCTL_RGB)
 
-// upside down
+// rorate right
 #elif ILI9806_SET_ROTATION == 3
     #define ILI9806_WIDTH  480
     #define ILI9806_HEIGHT 854
-    #define ILI9806_ROTATION (ILI9806_MADCTL_MY | ILI9806_MADCTL_BGR)
+    #define ILI9806_ROTATION (ILI9806_MADCTL_GS |ILI9806_MADCTL_ML | ILI9806_MADCTL_MX | ILI9806_MADCTL_RGB)
 #endif
 
 /****************************/
@@ -85,6 +88,14 @@
 #define ILI9806_COLOR565(r, g, b) (((r & 0xF8) << 8) | ((g & 0xFC) << 3) | ((b & 0xF8) >> 3))
 
 #define ABS(x) ((x) > 0 ? (x) : -(x))
+
+
+/**
+ * @brief Set the Display Address Window
+ * @param x, y -> Coordinates of the 2 corner of the window
+ * @return none
+ */
+void ILI9806_SetAddressWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
 
 /**
  * @brief Initialize the ili9806 controller
